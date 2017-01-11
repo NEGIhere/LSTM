@@ -1,1 +1,1 @@
-# Long Short Therm Memory Neural Network Testing (C++/SFML)
+# Long Short-Term Memory Neural Network Testing (C++/SFML)

@@ -1,0 +1,1 @@
+/usr/bin/c++   -g   CMakeFiles/LSTM.dir/src/LSTM.cpp.o CMakeFiles/LSTM.dir/src/Net.cpp.o CMakeFiles/LSTM.dir/src/Neuron.cpp.o CMakeFiles/LSTM.dir/src/Utils.cpp.o CMakeFiles/LSTM.dir/src/Config.cpp.o CMakeFiles/LSTM.dir/src/FuncPredictTest.cpp.o  -o LSTM -lsfml-graphics -lsfml-window -lsfml-system 

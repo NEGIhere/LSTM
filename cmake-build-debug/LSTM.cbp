@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="LSTM"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/negi/Development/CPP/LSTM/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/negi/Development/CPP/LSTM/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/negi/Development/CPP/LSTM/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="LSTM">
+				<Option output="/home/negi/Development/CPP/LSTM/cmake-build-debug/LSTM" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/negi/Development/CPP/LSTM/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/6/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/6/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/usr/include/c++/6"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/6"/>
+					<Add directory="/usr/include/c++/6/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 LSTM"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="LSTM/fast">
+				<Option output="/home/negi/Development/CPP/LSTM/cmake-build-debug/LSTM" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/negi/Development/CPP/LSTM/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/6/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/6/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/usr/include/c++/6"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/6"/>
+					<Add directory="/usr/include/c++/6/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 LSTM/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/negi/Development/CPP/LSTM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/negi/Development/CPP/LSTM/src/Config.cpp">
+			<Option target="LSTM"/>
+		</Unit>
+		<Unit filename="/home/negi/Development/CPP/LSTM/src/Config.h">
+			<Option target="LSTM"/>
+		</Unit>
+		<Unit filename="/home/negi/Development/CPP/LSTM/src/FuncPredictTest.cpp">
+			<Option target="LSTM"/>
+		</Unit>
+		<Unit filename="/home/negi/Development/CPP/LSTM/src/FuncPredictTest.h">
+			<Option target="LSTM"/>
+		</Unit>
+		<Unit filename="/home/negi/Development/CPP/LSTM/src/LSTM.cpp">
+			<Option target="LSTM"/>
+		</Unit>
+		<Unit filename="/home/negi/Development/CPP/LSTM/src/Net.cpp">
+			<Option target="LSTM"/>
+		</Unit>
+		<Unit filename="/home/negi/Development/CPP/LSTM/src/Net.h">
+			<Option target="LSTM"/>
+		</Unit>
+		<Unit filename="/home/negi/Development/CPP/LSTM/src/Neuron.cpp">
+			<Option target="LSTM"/>
+		</Unit>
+		<Unit filename="/home/negi/Development/CPP/LSTM/src/Neuron.h">
+			<Option target="LSTM"/>
+		</Unit>
+		<Unit filename="/home/negi/Development/CPP/LSTM/src/Utils.cpp">
+			<Option target="LSTM"/>
+		</Unit>
+		<Unit filename="/home/negi/Development/CPP/LSTM/src/Utils.h">
+			<Option target="LSTM"/>
+		</Unit>
+		<Unit filename="/home/negi/Development/CPP/LSTM/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

@@ -57,7 +57,7 @@ void Net::backProp(const std::vector<double> &targetVals) {
         error += delta * delta;
     }
     error /= outputLayer.size() - 1;
-    error = (double) sqrt(error);
+    error = (double) sqrt((long double) error);
 
     recentAverageError = (recentAverageError * recentAverageSmoothingFactor + error) / (recentAverageSmoothingFactor + 1.0);
 

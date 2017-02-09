@@ -63,6 +63,7 @@ void Neuron::updateInputWeights(Layer &prevLayer) {
 }
 
 void Neuron::calcOutputGradients(double targetVal) {
+    // TODO: shit delta - use SUM 1/2((target_i - out_i)^2) instead
     double delta = targetVal - outputVal;
     gradient = delta * transferFunctionDerivative(outputVal);
 }

@@ -18,6 +18,16 @@ Net::Net(const std::vector<unsigned int> &topology)
         for (unsigned int j = 0; j < numNeurons; j++) {
             layer.push_back(Neuron(numOutputs, numNeurons, j));
         }
+        /*if(i == 1) {
+            for (int j = 0; j < 16; j++) {
+                std::cout << "[";
+                for (Connection c : layer[j].memory.outputWeights) {
+                    printf("%.16f,", c.weight);
+                    //std::cout << c.weight << ",";
+                }
+                std::cout << "]," << std::endl;
+            }
+        }*/
 
         layer.back().setOutputValue(1.0);
 
@@ -28,7 +38,6 @@ Net::Net(const std::vector<unsigned int> &topology)
 
 Net::~Net() {
     layers.clear();
-
 }
 
 void Net::feedForward(const std::vector<double> &inputVals) {
@@ -57,7 +66,7 @@ void Net::backProp(const std::vector<double> &targetVals) {
         error += delta * delta;
     }
     error /= outputLayer.size() - 1;
-    error = (double) sqrt((long double) error);
+    error = (double) sqrt(error);
 
     recentAverageError = (recentAverageError * recentAverageSmoothingFactor + error) / (recentAverageSmoothingFactor + 1.0);
 
@@ -88,7 +97,41 @@ void Net::backProp(const std::vector<double> &targetVals) {
 }
 
 void Net::backPropThroughTime(const std::vector<double> &targetVals) {
+    Layer &outputLayer = layers.back();
+    error = 0.0;
 
+    // Root mean square error: sqrt(SUM(i,n, (target[i] - actual[i]) ^ 2) / n)
+    for (int n = 0; n < outputLayer.size() - 1; n++) {
+        double delta = targetVals[n] - outputLayer[n].getOutputValue();
+        error += delta * delta;
+    }
+    error /= outputLayer.size() - 1;
+    error = (double) sqrt(error);
+
+    recentAverageError = (recentAverageError * recentAverageSmoothingFactor + error) / (recentAverageSmoothingFactor + 1.0);
+
+    // Gradients for output layer
+    for (int i = 0; i < outputLayer.size() - 1; i++) {
+        outputLayer[i].calcOutputGradients(targetVals[i]);
+    }
+
+    // Gradients for hidden layers
+    for (unsigned long i = layers.size() - 2; i > 0; i--) {
+        Layer &hiddenLayer = layers[i];
+        Layer &nextLayer = layers[i + 1];
+
+        for (int j = 0; j < hiddenLayer.size(); j++) {
+            hiddenLayer[j].calcHiddenGradients(nextLayer);
+        }
+    }
+}
+
+void Net::clearMemory() {
+    for (unsigned int i = 1; i < layers.size(); i++) {
+        for (unsigned int j = 0; j < layers[i].size() - 1; j++) {
+            layers[i][j].clearMemory();
+        }
+    }
 }
 
 void Net::getResults(std::vector<double> &resultVals) const {

@@ -21,14 +21,14 @@ public:
     void getWeights(std::vector<double> &weightVals, bool bias);
     void setWeights(const std::vector<double> &weightVals, bool bias);
     int getConnectionsCount(bool bias) const;
-
-    virtual ~Net();
+    void clearMemory();
 
     const std::vector<Layer> &getLayers() const;
 
     bool isFirstRunning() const;
     static const MemoryConnectionType memoryConnectionType = ONE_TO_ONE;
 
+    virtual ~Net();
 private:
     std::vector<Layer> layers;
     double error, recentAverageError;

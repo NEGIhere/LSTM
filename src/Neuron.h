@@ -15,7 +15,8 @@ struct Connection {
 
 struct Memory {
     std::vector<Connection> outputWeights;
-    double outputVal;
+    std::vector<double> outputValues;
+    std::vector<double> gradients;
 };
 
 typedef std::vector<Neuron> Layer;
@@ -31,20 +32,21 @@ public:
     void calcOutputGradients(double targetVal);
     void calcHiddenGradients(const Layer &nextLayer);
     void updateInputWeights(Layer &prevLayer);
+    void clearMemory();
 
     virtual ~Neuron();
 
     std::vector<Connection> outputWeights;
-    //std::vector<Memory> memoryCells;
     Memory memory;
+    static double sigmoid(double x);
 private:
     static double eta; // net training rate
     static double alpha; // Multiplier or last weight change (momentum)
     static double randomWeight(void) { return rand() / double(RAND_MAX); }
     static double transferFunction(double x);
     static double transferFunctionDerivative(double x);
-    double sigmoid(double x);
     double sigmoidDerivative(double x);
+    double sigmoidOutputToDerivative(double output);
 
     double sumDerivativeOutputWeights(const Layer &nextLayer) const;
     double outputVal;

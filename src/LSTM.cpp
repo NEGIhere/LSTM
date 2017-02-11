@@ -1,7 +1,9 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include "Config.h"
 #include "FuncPredictTest.h"
 #include "Utils.h"
+#include "RNNTest.h"
 
 sf::RenderWindow* window;
 
@@ -17,7 +19,8 @@ void draw() {
 }
 
 int main() {
-    srand(time(0));
+    srand(1); //
+    RNNTest* rnn = new RNNTest();
 
     bool rendering = true;
     test = new FuncPredictTest();
@@ -33,31 +36,31 @@ int main() {
     view.zoom(1.0f);
     window->setView(view);
 
-    while(window->isOpen()) {
+    while (window->isOpen()) {
         sf::Event event;
 
-        while(window->pollEvent(event)) {
-            if(event.type == sf::Event::Closed) {
+        while (window->pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
                 window->close();
                 break;
-            } else if(event.type == sf::Event::MouseButtonPressed) {
+            } else if (event.type == sf::Event::MouseButtonPressed) {
                 int MouseX = sf::Mouse::getPosition(*window).x;
                 int MouseY = sf::Mouse::getPosition(*window).y;
 
-                if(event.mouseButton.button == sf::Mouse::Left) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
                     rendering = !rendering;
                 }
-            } else if(event.type == sf::Event::KeyPressed) {
-                if(event.key.code == sf::Keyboard::S) {
+            } else if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::S) {
                     //balance->save();
-                } else if(event.key.code == sf::Keyboard::L) {
+                } else if (event.key.code == sf::Keyboard::L) {
                     //balance->load();
                 }
             }
         }
         update();
         window->clear(sf::Color::White);
-        if(rendering) {
+        if (rendering) {
             draw();
         }
         window->display();

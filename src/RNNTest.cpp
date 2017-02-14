@@ -12,7 +12,6 @@ RNNTest::RNNTest() {
     std::vector<double> weights;
     net->getWeights(weights, false);
     //Utils::print(weights);
-    printf("%.16f\n", Neuron::sigmoid(1.51251924189248));
 
     int binaryDim = 8;
     int largestNum = (int)pow(2, binaryDim);
@@ -35,17 +34,32 @@ RNNTest::RNNTest() {
     int* a = int2bin[a_int];
     int* b = int2bin[b_int];
     int* c = int2bin[c_int];
+    int* d = new int[binaryDim];
 
     std::vector<double> results;
 
-    for (int pos = 0; pos < 2; pos++) {
-        net->feedForward({a[binaryDim - 1 - pos], b[binaryDim - 1 - pos]});
-        net->getResults(results);
-        std::cout << "Out: ";
-        Utils::print(results);
-    }
+    for (int i = 0; i < 1; i++) {
+        for (int pos = 0; pos < 2; pos++) {
+            printf("ITERATION - %d\n", pos);
+            int x0 = a[binaryDim - 1 - pos];
+            int x1 = b[binaryDim - 1 - pos];
+            net->feedForward({x0, x1});
+            net->getResults(results);
+            std::cout << "Out: ";
+            Utils::print(results);
+            d[binaryDim - pos - 1] = (int)round(results[0]);
 
-    net->clearMemory();
+            int Y = c[binaryDim - 1 - pos];
+            net->backPropThroughTimeOutput({Y});
+        }
+
+        for (int pos = 0; pos < 2; pos++) {
+            printf("BP ITERATION - %d\n", pos);
+            net->backPropThroughTime({0});
+        }
+
+        net->clearMemory();
+    }
 }
 
 void RNNTest::update() {

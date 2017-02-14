@@ -15,6 +15,7 @@ public:
     void feedForward(const std::vector<double> &inputVals);
     void backProp(const std::vector<double> &targetVals);
     void backPropThroughTime(const std::vector<double> &targetVals);
+    void backPropThroughTimeOutput(const std::vector<double> &targetVals);
     void getResults(std::vector<double> &resultVals) const;
     double getRecentAverageError(void) const { return recentAverageError; }
     double getError(void) const { return error; }

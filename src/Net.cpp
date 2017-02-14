@@ -96,11 +96,10 @@ void Net::backProp(const std::vector<double> &targetVals) {
     }
 }
 
-void Net::backPropThroughTime(const std::vector<double> &targetVals) {
+void Net::backPropThroughTimeOutput(const std::vector<double> &targetVals) {
     Layer &outputLayer = layers.back();
     error = 0.0;
 
-    // Root mean square error: sqrt(SUM(i,n, (target[i] - actual[i]) ^ 2) / n)
     for (int n = 0; n < outputLayer.size() - 1; n++) {
         double delta = targetVals[n] - outputLayer[n].getOutputValue();
         error += delta * delta;
@@ -112,16 +111,18 @@ void Net::backPropThroughTime(const std::vector<double> &targetVals) {
 
     // Gradients for output layer
     for (int i = 0; i < outputLayer.size() - 1; i++) {
-        outputLayer[i].calcOutputGradients(targetVals[i]);
+        outputLayer[i].calcOutputGradientsTT(targetVals[i]);
     }
+}
 
+void Net::backPropThroughTime(const std::vector<double> &targetVals) {
     // Gradients for hidden layers
     for (unsigned long i = layers.size() - 2; i > 0; i--) {
         Layer &hiddenLayer = layers[i];
         Layer &nextLayer = layers[i + 1];
 
         for (int j = 0; j < hiddenLayer.size(); j++) {
-            hiddenLayer[j].calcHiddenGradients(nextLayer);
+            hiddenLayer[j].calcHiddenGradientsTT(nextLayer);
         }
     }
 }

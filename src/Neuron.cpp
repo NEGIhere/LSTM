@@ -27,6 +27,9 @@ Neuron::Neuron(unsigned int numOutputs, unsigned int totalNeuronsInLayer, unsign
         for (int i = 0; i < numOutputs; i++) {
             //std::cout << outputWeights[i].weight << "*=" << factor << "/" << sum << "=" << outputWeights[i].weight << std::endl;
             outputWeights[i].weight *= factor / sum;
+            /*if (numOutputs == 1) {
+                printf("[%f],", outputWeights[i].weight);
+            }*/
         }
 
         for (int i = 0; i < totalNeuronsInLayer - 1; ++i) {
@@ -72,9 +75,36 @@ void Neuron::calcOutputGradients(double targetVal) {
     gradient = delta * sigmoidOutputToDerivative(outputVal);
 }
 
+void Neuron::calcOutputGradientsTT(double targetVal) {
+    double delta = targetVal - outputVal;
+    gradient = delta * sigmoidOutputToDerivative(outputVal);
+    memory.gradients.push_back(gradient);
+    Utils::print(memory.gradients);
+}
+
 void Neuron::calcHiddenGradients(const Layer &nextLayer) {
     double dow = sumDerivativeOutputWeights(nextLayer);
     gradient = dow * sigmoidOutputToDerivative(outputVal);
+}
+
+void Neuron::calcHiddenGradientsTT(const Layer &nextLayer) {
+    //double dow = sumDerivativeOutputWeights(nextLayer);
+    double dow = 0.0;
+    double dmw = 0.0;
+
+    for (int i = 0; i < nextLayer.size() - 1; i++) {
+        for (int j = 0; j < nextLayer[i].memory.gradients.size(); j++) {
+            dow += outputWeights[i].weight * nextLayer[i].memory.gradients[j];
+        }
+    }
+
+    for (int i = 0; i < memory.outputWeights.size() - 1; i++) {
+        //dmw += memory.outputWeights[0].weight * memory.gradients
+    }
+
+    gradient = (dmw + dow) * sigmoidOutputToDerivative(outputVal);
+
+    dow = 2;
 }
 
 void Neuron::feedForward(const Layer &prevLayer, const Layer &currentLayer, bool isOutputLayer) {
@@ -82,33 +112,31 @@ void Neuron::feedForward(const Layer &prevLayer, const Layer &currentLayer, bool
     double sum = 0.0;
 
     if (!isOutputLayer) {
-        if (Net::memoryConnectionType == MANY_TO_MANY) {
-            for (int i = 0; i < currentLayer.size(); i++) {
-                memorySum += currentLayer[i].memory.outputValues.back() *
-                             currentLayer[i].memory.outputWeights[index].weight; //currentLayer[i].getMemoryOutputValue() * currentLayer[i].outputWeights[index].weight;
-            }
-        } else {
-            for (int i = 0; i < currentLayer.size() - 1; i++) {
-                memorySum += currentLayer[i].memory.outputValues.back() * memory.outputWeights[i].weight;
-                if (currentLayer.size() == 17 && index == 0) std::cout << currentLayer[i].memory.outputValues.back() << "*" << memory.outputWeights[i].weight << " ";
-            }
-            if (currentLayer.size() == 17 && index == 0) std::cout << "= " << memorySum << std::endl;
+        for (int i = 0; i < currentLayer.size() - 1; i++) {
+            memorySum += currentLayer[i].memory.outputValues.back() * memory.outputWeights[i].weight;
+            //if (currentLayer.size() == 17 && (index == 1)) std::cout << currentLayer[i].memory.outputValues.back() << "*" << memory.outputWeights[i].weight << "=" << a << " ";
         }
+        //if (currentLayer.size() == 17 && index == 1) std::cout << "== " << memorySum << std::endl;
     }
 
     for (int i = 0; i < prevLayer.size() - 1; i++) { // TODO: BIAS
         sum += prevLayer[i].getOutputValue() * prevLayer[i].outputWeights[index].weight;
+        /*if (currentLayer.size() == 2) {
+            printf("%.16f*%.16f + ", prevLayer[i].getOutputValue(), prevLayer[i].outputWeights[index].weight);
+        }*/
     }
 
+    /*if (currentLayer.size() == 2) {
+        printf("\n");
+        printf("s%.16f\n", sum);
+    }*/
     outputVal = sigmoid(sum + memorySum);
 
     if (currentLayer.size() == 17) {
-        if (index == 0) printf("ov=%.016f ", outputVal);
+        //if (index == -1 || index == 1 || index == 2) printf("ov%d=%.016f ", (int)index, outputVal);
         //std::cout << outputVal << " ";
         //std::cout << sum << "+" << memorySum << " ";
-        for (Connection c : memory.outputWeights) {
-            //std::cout << c.weight
-        }
+
     }
     this->memory.outputValues.push_back(outputVal);
 }

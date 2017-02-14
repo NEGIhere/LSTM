@@ -30,7 +30,9 @@ public:
     double getOutputValue(void) const { return outputVal; }
     void feedForward(const Layer &prevLayer, const Layer &currentLayer, bool isOutputLayer);
     void calcOutputGradients(double targetVal);
+    void calcOutputGradientsTT(double targetVal);
     void calcHiddenGradients(const Layer &nextLayer);
+    void calcHiddenGradientsTT(const Layer &nextLayer);
     void updateInputWeights(Layer &prevLayer);
     void clearMemory();
 

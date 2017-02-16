@@ -5,7 +5,7 @@
 #include <iostream>
 #include <cstring>
 #include "RNNTest.h"
-#include "Utils.h"
+#include "utils/Utils.h"
 
 RNNTest::RNNTest() {
     net = new Net({2, 16, 1});

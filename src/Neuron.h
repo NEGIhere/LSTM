@@ -22,6 +22,7 @@ struct Memory {
 typedef std::vector<Neuron> Layer;
 
 class Neuron {
+
 public:
     const int MAX_MEMORY_CELLS = 10;
 
@@ -40,15 +41,11 @@ public:
 
     std::vector<Connection> outputWeights;
     Memory memory;
-    static double sigmoid(double x);
+    friend class Net;
 private:
+    void feedForwardMemory(const Layer &prevLayer, const Layer &currentLayer, bool isOutputLayer);
     static double eta; // net training rate
     static double alpha; // Multiplier or last weight change (momentum)
-    static double randomWeight(void) { return rand() / double(RAND_MAX); }
-    static double transferFunction(double x);
-    static double transferFunctionDerivative(double x);
-    double sigmoidDerivative(double x);
-    double sigmoidOutputToDerivative(double output);
 
     double sumDerivativeOutputWeights(const Layer &nextLayer) const;
     double outputVal;

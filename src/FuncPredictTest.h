@@ -8,7 +8,7 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <cmath>
-#include "Config.h"
+#include "utils/Config.h"
 
 class FuncPredictTest {
 public:

@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "FuncPredictTest.h"
-#include "Config.h"
+#include "utils/Config.h"
 #include "Net.h"
 
 FuncPredictTest::FuncPredictTest() {

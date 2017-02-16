@@ -4,6 +4,7 @@ project(LSTM)
 if (UNIX)
     set(CMAKE_CXX_STANDARD 14)
     #include_directories("");
+    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -funsafe-math-optimizations")
 elseif (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -static-libgcc")
 endif()
@@ -14,12 +15,12 @@ set(SOURCE_FILES
         src/Net.cpp
         src/Neuron.h
         src/Neuron.cpp
-        src/Utils.h
-        src/Utils.cpp
-        src/Config.h
-        src/Config.cpp
+        src/utils/Utils.h
+        src/utils/Utils.cpp
+        src/utils/Config.h
+        src/utils/Config.cpp
         src/FuncPredictTest.cpp
-        src/FuncPredictTest.h src/RNNTest.cpp src/RNNTest.h)
+        src/FuncPredictTest.h src/RNNTest.cpp src/RNNTest.h src/utils/matrix.cpp src/utils/matrix.h)
 
 add_executable(LSTM ${SOURCE_FILES})
 

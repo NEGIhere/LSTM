@@ -3,8 +3,9 @@
 #include <iostream>
 #include <assert.h>
 #include "Neuron.h"
-#include "Utils.h"
+#include "utils/Utils.h"
 #include "Net.h"
+#include "utils/matrix.h"
 
 double Neuron::eta = 0.15;
 double Neuron::alpha = 0.5;
@@ -72,19 +73,19 @@ void Neuron::calcOutputGradients(double targetVal) {
     // TODO: should I use SUM 1/2((target_i - out_i)^2) ?
     // error
     double delta = targetVal - outputVal;
-    gradient = delta * sigmoidOutputToDerivative(outputVal);
+    gradient = delta * Utils::sigmoidOutputToDerivative(outputVal);
 }
 
 void Neuron::calcOutputGradientsTT(double targetVal) {
     double delta = targetVal - outputVal;
-    gradient = delta * sigmoidOutputToDerivative(outputVal);
+    gradient = delta * Utils::sigmoidOutputToDerivative(outputVal);
     memory.gradients.push_back(gradient);
-    Utils::print(memory.gradients);
+    //Utils::print(memory.gradients);
 }
 
 void Neuron::calcHiddenGradients(const Layer &nextLayer) {
     double dow = sumDerivativeOutputWeights(nextLayer);
-    gradient = dow * sigmoidOutputToDerivative(outputVal);
+    gradient = dow * Utils::sigmoidOutputToDerivative(outputVal);
 }
 
 void Neuron::calcHiddenGradientsTT(const Layer &nextLayer) {
@@ -102,68 +103,45 @@ void Neuron::calcHiddenGradientsTT(const Layer &nextLayer) {
         //dmw += memory.outputWeights[0].weight * memory.gradients
     }
 
-    gradient = (dmw + dow) * sigmoidOutputToDerivative(outputVal);
+    gradient = (dmw + dow) * Utils::sigmoidOutputToDerivative(outputVal);
 
     dow = 2;
 }
 
 void Neuron::feedForward(const Layer &prevLayer, const Layer &currentLayer, bool isOutputLayer) {
-    double memorySum = 0.0;
     double sum = 0.0;
+
+    for (int i = 0; i < prevLayer.size() - 1; i++) { // TODO: BIAS
+        sum += prevLayer[i].getOutputValue() * prevLayer[i].outputWeights[index].weight;
+        if (currentLayer.size() == 17) {
+            //printf("%.16f*%.16f + ", prevLayer[i].getOutputValue(), prevLayer[i].outputWeights[index].weight);
+        }
+    }
+
+    outputVal = sum;
+}
+
+void Neuron::feedForwardMemory(const Layer &prevLayer, const Layer &currentLayer, bool isOutputLayer) {
+    double memorySum = 0.0;
 
     if (!isOutputLayer) {
         for (int i = 0; i < currentLayer.size() - 1; i++) {
-            memorySum += currentLayer[i].memory.outputValues.back() * memory.outputWeights[i].weight;
-            //if (currentLayer.size() == 17 && (index == 1)) std::cout << currentLayer[i].memory.outputValues.back() << "*" << memory.outputWeights[i].weight << "=" << a << " ";
+            double d = currentLayer[i].memory.outputValues.back();
+            double weight = memory.outputWeights[i].weight;
+            memorySum += d * weight;
+            if (currentLayer.size() == 17) printf("%.16f*%.16f + ", d, weight);
         }
         //if (currentLayer.size() == 17 && index == 1) std::cout << "== " << memorySum << std::endl;
     }
 
-    for (int i = 0; i < prevLayer.size() - 1; i++) { // TODO: BIAS
-        sum += prevLayer[i].getOutputValue() * prevLayer[i].outputWeights[index].weight;
-        /*if (currentLayer.size() == 2) {
-            printf("%.16f*%.16f + ", prevLayer[i].getOutputValue(), prevLayer[i].outputWeights[index].weight);
-        }*/
-    }
+    printf("= %.16f\n", memorySum);
 
-    /*if (currentLayer.size() == 2) {
-        printf("\n");
-        printf("s%.16f\n", sum);
-    }*/
-    outputVal = sigmoid(sum + memorySum);
+    outputVal = Utils::sigmoid(outputVal + memorySum);
 
-    if (currentLayer.size() == 17) {
-        //if (index == -1 || index == 1 || index == 2) printf("ov%d=%.016f ", (int)index, outputVal);
-        //std::cout << outputVal << " ";
-        //std::cout << sum << "+" << memorySum << " ";
-
-    }
     this->memory.outputValues.push_back(outputVal);
 }
 
 void Neuron::clearMemory() {
     memory.outputValues.clear();
     memory.outputValues.push_back(0);
-}
-
-double Neuron::sigmoid(double x) {
-    return (1.0 / (1 + exp(-x)));
-}
-
-double Neuron::sigmoidDerivative(double x) {
-    // (exp(x) / ((exp(x) + 1) * (exp(x) + 1)))
-    // (1/(1+exp(-x)))*(1-(1/(1+exp(-x))))
-    return (1/(1+exp(-x)))*(1-(1/(1+exp(-x))));
-}
-
-double Neuron::sigmoidOutputToDerivative(double output) {
-    return output * (1 - output);
-}
-
-double Neuron::transferFunction(double x) {
-    return tanh(x);
-}
-
-double Neuron::transferFunctionDerivative(double x) {
-    return 1.0 - tanh(x) * tanh(x); //1.0 - x * x
 }

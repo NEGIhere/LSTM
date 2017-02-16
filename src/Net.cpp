@@ -54,6 +54,14 @@ void Net::feedForward(const std::vector<double> &inputVals) {
             layers[i][j].feedForward(prevLayer, currentLayer, i == (layers.size() - 1));
         }
     }
+
+    for (unsigned int i = 1; i < layers.size(); i++) {
+        for (unsigned int j = 0; j < layers[i].size() - 1; j++) {
+            Layer &prevLayer = layers[i - 1];
+            Layer &currentLayer = layers[i];
+            layers[i][j].feedForwardMemory(prevLayer, currentLayer, i == (layers.size() - 1));
+        }
+    }
 }
 
 void Net::backProp(const std::vector<double> &targetVals) {

@@ -1,9 +1,10 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "Config.h"
+#include "utils/Config.h"
 #include "FuncPredictTest.h"
-#include "Utils.h"
+#include "utils/Utils.h"
 #include "RNNTest.h"
+#include "utils/matrix.h"
 
 sf::RenderWindow* window;
 
@@ -18,7 +19,14 @@ void draw() {
     test->draw(*window);
 }
 
+void sghhit(const unsigned int a, const unsigned int b) {
+    std::cout << a << b;
+}
+
 int main() {
+    matrix mat = 2 * matrix::random::rand(4,4) + (-1.0);
+    Utils::print(mat);
+
     srand(1); //
     RNNTest* rnn = new RNNTest();
 

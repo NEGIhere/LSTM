@@ -7,7 +7,7 @@
 
 
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "Net.h"
+#include "../old/Net.h"
 
 class RNNTest {
 public:

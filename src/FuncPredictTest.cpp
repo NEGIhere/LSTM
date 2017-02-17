@@ -5,7 +5,7 @@
 #include <iostream>
 #include "FuncPredictTest.h"
 #include "utils/Config.h"
-#include "Net.h"
+#include "../old/Net.h"
 
 FuncPredictTest::FuncPredictTest() {
     //Net net({2, 3, 1});
@@ -28,7 +28,7 @@ void FuncPredictTest::draw(sf::RenderWindow& window) {
     unsigned int num = 0;
 
     for (int i = 0; i < DOTS; ++i) {
-        float x = SCREEN_WIDTH * 2 / DOTS * i;
+        float x = SCREEN_WIDTH * 2 / (DOTS - 1) * i;
 
         if (num > 1) {
             num++;

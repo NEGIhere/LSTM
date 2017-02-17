@@ -24,8 +24,10 @@ void sghhit(const unsigned int a, const unsigned int b) {
 }
 
 int main() {
-    matrix mat = 2 * matrix::random::rand(4,4) + (-1.0);
-    Utils::print(mat);
+    int a = 2;
+
+    matrix mat = 2 * matrix::random::rand(4,4) - 1.0;
+    //Utils::print(mat);
 
     srand(1); //
     RNNTest* rnn = new RNNTest();
@@ -52,8 +54,8 @@ int main() {
                 window->close();
                 break;
             } else if (event.type == sf::Event::MouseButtonPressed) {
-                int MouseX = sf::Mouse::getPosition(*window).x;
-                int MouseY = sf::Mouse::getPosition(*window).y;
+                int mouseX = sf::Mouse::getPosition(*window).x;
+                int mouseY = sf::Mouse::getPosition(*window).y;
 
                 if (event.mouseButton.button == sf::Mouse::Left) {
                     rendering = !rendering;

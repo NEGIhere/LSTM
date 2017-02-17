@@ -84,18 +84,19 @@ matrix Utils::sigmoidOutputToDerivative(matrix output) {
 void Utils::print(const matrix &m) {
     int ws = 0; // whitespaces
     std::stringstream out;
-    out << "[";
+    std::cout << "[";
     for (auto& r : m.elements) {
         for (int i = 0; i < ws; ++i) {
-            out << ' ';
+            std::cout << ' ';
         }
-        out << "[";
+        std::cout << "[";
         for (auto& c : r) {
-            out << c << ",";
+            //out << c << ",";
+            printf("%.16f,", c);
         }
-        out << "\b],\n";
+        std::cout << "\b],\n";
         if (ws == 0) ws++;
     }
     //out << "\b\b";
-    std::cout << out.rdbuf();
+    //std::cout << out.rdbuf();
 }

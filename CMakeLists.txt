@@ -11,10 +11,10 @@ endif()
 
 set(SOURCE_FILES
         src/LSTM.cpp
-        src/Net.h
-        src/Net.cpp
-        src/Neuron.h
-        src/Neuron.cpp
+        old/Net.h
+        old/Net.cpp
+        old/Neuron.h
+        old/Neuron.cpp
         src/utils/Utils.h
         src/utils/Utils.cpp
         src/utils/Config.h

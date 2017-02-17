@@ -17,17 +17,25 @@ public:
     };
 
     std::vector<std::vector<double>> elements;
+    unsigned int numRows, numColumns;
 
     //explicit matrix(const std::vector<double> &elements);
     explicit matrix(const std::vector<std::vector<double>> &elements);
     explicit matrix(const unsigned int m, const unsigned int n);
 
+    matrix transposed();
+
     matrix& dot(const matrix& other);
+    static matrix mbe(matrix m0, matrix m1); /// Multiply by elements
     matrix& add(const matrix& other);
+    matrix& sub(const matrix& other);
     matrix& mul(const double num);
     matrix& add(const double num);
+    matrix& sub(const double num);
     matrix& operator+=(const matrix& other);
+    matrix& operator-=(const matrix& other);
     matrix& operator+=(const double num);
+    matrix& operator-=(const double num);
     matrix& operator*=(const matrix& other);
     matrix& operator*=(const double num);
 
@@ -47,6 +55,14 @@ inline matrix operator+(matrix left, const matrix& right) {
 
 inline matrix operator+(matrix left, const double& num) {
     return left.add(num);
+}
+
+inline matrix operator-(matrix left, const matrix& right) {
+    return left.sub(right);
+}
+
+inline matrix operator-(matrix left, const double& num) {
+    return left.sub(num);
 }
 
 inline matrix operator*(matrix left, const double& num) {

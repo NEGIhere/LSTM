@@ -8,6 +8,7 @@
 #include <iterator>
 #include <sstream>
 #include "matrix.h"
+#include <iostream>
 
 #define PI 3.14159265359f
 #define rad2deg (1 / PI * 180.0f)

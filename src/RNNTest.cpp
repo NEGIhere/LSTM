@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <math.h>
 #include "RNNTest.h"
 #include "utils/Utils.h"
 

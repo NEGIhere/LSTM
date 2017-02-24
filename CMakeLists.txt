@@ -20,7 +20,7 @@ set(SOURCE_FILES
         src/utils/Config.h
         src/utils/Config.cpp
         src/FuncPredictTest.cpp
-        src/FuncPredictTest.h src/RNNTest.cpp src/RNNTest.h src/utils/matrix.cpp src/utils/matrix.h)
+        src/FuncPredictTest.h src/RNNTest.cpp src/RNNTest.h src/utils/matrix.cpp src/utils/matrix.h src/Model.cpp src/Model.h)
 
 add_executable(LSTM ${SOURCE_FILES})
 

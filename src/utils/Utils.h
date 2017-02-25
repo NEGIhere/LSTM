@@ -35,6 +35,12 @@ public:
     }
 
     static std::vector<double> softmax(const std::vector<double>& vec);
+    static int argmax(const std::vector<double>& vec);
+
+    template<typename Base, typename T>
+    static inline bool instanceOf(const T *) {
+        return std::is_base_of<Base, T>::value;
+    }
 
     template<typename T> static void print(const std::vector<T>& vec) {
         if (!vec.empty()) {
@@ -47,7 +53,7 @@ public:
     }
 
     template<typename T> static void print(const T& o) {
-        std::cout << ">> " << o << std::endl;
+        std::cout << o << std::endl;
     }
 
     static void print(const matrix& m);

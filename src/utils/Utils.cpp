@@ -1,10 +1,9 @@
 #include <iostream>
 #include "Utils.h"
 
+// TODO: re-test
 std::vector<double> Utils::softmax(const std::vector<double>& vec) {
     std::vector<double> out(vec.size());
-
-    int i = 0;
 
     double sum = 0;
     for(auto& v : vec) {
@@ -12,9 +11,22 @@ std::vector<double> Utils::softmax(const std::vector<double>& vec) {
     }
 
     for(auto& v : vec) {
-        out[i++] = exp(v) / sum;
+        out.push_back(exp(v) / sum);
     }
     return out;
+}
+
+int Utils::argmax(const std::vector<double> &vec) {
+    int index = 0;
+    double max = vec[0];
+
+    for(int i = 0; i < vec.size(); i++) {
+        if (max < vec[i]) {
+            index = i;
+            max = vec[i];
+        }
+    }
+    return index;
 }
 
 double Utils::sigmoid(double x) {

@@ -8,8 +8,7 @@
 #include "../old/Net.h"
 
 FuncPredictTest::FuncPredictTest() {
-    //Net net({2, 3, 1});
-    //net.feedForward({1, 1});
+
 }
 
 void FuncPredictTest::update() {

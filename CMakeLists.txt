@@ -4,17 +4,20 @@ project(LSTM)
 if (UNIX)
     set(CMAKE_CXX_STANDARD 14)
     #include_directories("");
-    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -funsafe-math-optimizations")
 elseif (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -static-libgcc")
 endif()
 
+if (OPTIMIZED)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+endif()
+
 set(SOURCE_FILES
         src/LSTM.cpp
-        old/Net.h
-        old/Net.cpp
-        old/Neuron.h
-        old/Neuron.cpp
+#        old/Net.h
+#        old/Net.cpp
+#        old/Neuron.h
+#        old/Neuron.cpp
         src/utils/Utils.h
         src/utils/Utils.cpp
         src/utils/Config.h

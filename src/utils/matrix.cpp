@@ -13,46 +13,25 @@ matrix::matrix(const unsigned int m, const unsigned int n)
 
 matrix::matrix(const std::vector<std::vector<double>> &elements)
         : elements(elements), numRows((int)elements.size()), numColumns((int)elements[0].size()) {
-
 }
-/*
+
 matrix& matrix::dot(const matrix& other) {
-    assert(elements[0].size() == other.elements.size());
+    assert(numColumns == other.numRows);
 
-    numRows = (int)elements.size();
-    numColumns = (int)other.elements[0].size();
+    std::vector<std::vector<double>> data(numRows, std::vector<double>(other.numColumns));
 
-    std::vector<std::vector<double>> data(numRows, std::vector<double>(numColumns));
     for (int row = 0; row < numRows; row++) {
-        for (int col = 0; col < elements[row].size(); col++) {
-            float sum = 0.0f;
-            for (int i = 0; i < numRows; i++) {
-                sum += elements[row][i] * other.elements[i][col];
-            }
-            data[row][col] = sum;
-        }
-    }
-    elements = data;
-    return *this;
-}
- */
-matrix& matrix::dot(const matrix& other) {
-    assert(elements[0].size() == other.elements.size());
-
-    std::vector<std::vector<double>> data(elements.size(), std::vector<double>(other.elements[0].size()));
-
-    for (int row = 0; row < elements.size(); row++) {
-        for (int col = 0; col < other.elements[0].size(); col++) {
-            float sum = 0.0f;
-            for (int i = 0; i < other.elements.size(); i++) {
+        for (int col = 0; col < other.numColumns; col++) {
+            double sum = 0.0;
+            for (int i = 0; i < other.numRows; i++) {
                 double a = elements[row][i];
                 double b = other.elements[i][col];
-
                 sum += a * b;
             }
             data[row][col] = sum;
         }
     }
+
     elements = data;
     numRows = (int)data.size();
     numColumns = (int)data[0].size();
@@ -60,7 +39,7 @@ matrix& matrix::dot(const matrix& other) {
 }
 
 matrix& matrix::add(const matrix &other) {
-    assert(numRows == other.elements.size() && numColumns == other.elements[0].size());
+    assert(numRows == other.numRows && numColumns == other.numColumns);
 
     for (int i = 0; i < numRows; i++) {
         for (int j = 0; j < numColumns; ++j) {
@@ -101,7 +80,8 @@ matrix& matrix::add(const double num) {
 }
 
 matrix& matrix::sub(const matrix &other) {
-    assert(numRows == other.elements.size() && numColumns == other.elements[0].size());
+    assert(numRows == other.numRows && numColumns == other.numColumns);
+
     for (int i = 0; i < numRows; i++) {
         for (int j = 0; j < numColumns; ++j) {
             elements[i][j] -= other.elements[i][j];
@@ -144,6 +124,10 @@ matrix &matrix::operator-=(const double num) {
     return sub(num);
 }
 
+std::vector<double>& matrix::operator[](const unsigned int i) {
+    return elements[i];
+}
+
 matrix matrix::transposed() {
     matrix transposed(numColumns, numRows);
 
@@ -156,10 +140,6 @@ matrix matrix::transposed() {
     return transposed;
 }
 
-matrix::~matrix() {
-    //delete elements;
-}
-
 matrix matrix::random::rand(const unsigned int n, const unsigned int m) {
     matrix mat(n,m);
     for (auto& r : mat.elements) {
@@ -170,12 +150,6 @@ matrix matrix::random::rand(const unsigned int n, const unsigned int m) {
     return mat;
 }
 
-void matrix::print() {
-    //for (int j = 0; j < elements->size(); ++j) {
-    //    for (int i = 0; i < elements.get()[j].size(); ++i) {
-    //        std::cout << ((std::vector<double>)elements.get()[j][j])[2];
-
-    //    }
-    //}
+matrix::~matrix() {
+    //delete elements;
 }
-

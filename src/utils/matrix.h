@@ -38,6 +38,7 @@ public:
     matrix& operator-=(const double num);
     matrix& operator*=(const matrix& other);
     matrix& operator*=(const double num);
+    std::vector<double>& operator[](const unsigned int i);
 
     void print();
 

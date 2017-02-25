@@ -19,17 +19,10 @@ void draw() {
     test->draw(*window);
 }
 
-void sghhit(const unsigned int a, const unsigned int b) {
-    std::cout << a << b;
-}
-
 int main() {
-    int a = 2;
-    int& b = a;
-    b = 228;
-    std::cout << a << std::endl;
     matrix mat = 2 * matrix::random::rand(4,4) - 1.0;
     //Utils::print(mat);
+    double (*func)(double x) = &Utils::sigmoid;
 
     srand(1); //
     RNNTest* rnn = new RNNTest();

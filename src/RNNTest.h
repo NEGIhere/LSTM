@@ -7,7 +7,6 @@
 
 
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "../old/Net.h"
 
 class RNNTest {
 public:
@@ -18,7 +17,6 @@ public:
     void draw(sf::RenderWindow& window);
 
 private:
-    Net* net;
 };
 
 

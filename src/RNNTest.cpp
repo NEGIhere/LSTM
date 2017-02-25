@@ -56,7 +56,7 @@ RNNTest::RNNTest() {
             ySet.push_back(y);
         }
 
-        model.train(XSet, ySet, d, 8);
+        model.train(XSet, ySet, d);
 
         for (int j = 0; j < binaryDim / 2; j++) {
             std::swap(d[j], d[binaryDim - j - 1]);
@@ -101,7 +101,7 @@ RNNTest::RNNTest() {
         int* a = int2bin[a_int];
         int* b = int2bin[b_int];
         int* c = int2bin[c_int];
-        int* d = new int[binaryDim];
+        int* predicted = new int[binaryDim];
 
         matrix s0Update = matrix(2, 16);
         matrix b0Update = matrix(1, 16);
@@ -137,7 +137,7 @@ RNNTest::RNNTest() {
             recentAverageError = (recentAverageError * recentAverageSmoothingFactor + error) / (recentAverageSmoothingFactor + 1.0);
 
             double &x = l2[0][0];
-            d[binaryDim - pos - 1] = (int)std::round(x);
+            predicted[binaryDim - pos - 1] = (int)std::round(x);
             l1Values.push_back(l1);
         }
 
@@ -179,11 +179,11 @@ RNNTest::RNNTest() {
 
         if (i % 1000 == 0) {
             Utils::print(std::string("Error:") + std::to_string(recentAverageError));
-            Utils::print(std::string("Pred:") + std::to_string(d[0]) + std::to_string(d[1]) + std::to_string(d[2]) + std::to_string(d[3]) + std::to_string(d[4]) + std::to_string(d[5]) + std::to_string(d[6]) + std::to_string(d[7]));
+            Utils::print(std::string("Pred:") + std::to_string(predicted[0]) + std::to_string(predicted[1]) + std::to_string(predicted[2]) + std::to_string(predicted[3]) + std::to_string(predicted[4]) + std::to_string(predicted[5]) + std::to_string(predicted[6]) + std::to_string(predicted[7]));
             Utils::print(std::string("True:") + std::to_string(c[0]) + std::to_string(c[1]) + std::to_string(c[2]) + std::to_string(c[3]) + std::to_string(c[4]) + std::to_string(c[5]) + std::to_string(c[6]) + std::to_string(c[7]));
             int out = 0;
             for (int j = binaryDim - 1; j >= 0; j--) {
-                out += d[j]*pow(2, binaryDim-j-1);
+                out += predicted[j]*pow(2, binaryDim-j-1);
             }
             Utils::print(std::to_string(a_int) + " + " + std::to_string(b_int) + " = " + std::to_string(out));
         }

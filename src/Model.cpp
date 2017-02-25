@@ -15,7 +15,7 @@ void Model::addLayer(Layer* layer) {
     layers.push_back(layer);
 }
 
-void Model::train(std::vector<matrix>& XSet, std::vector<matrix>& ySet, double* predicted, unsigned int predictedCount) {
+void Model::train(std::vector<matrix>& XSet, std::vector<matrix>& ySet, double* predicted) {
     const unsigned int size = (unsigned int)XSet.size();
     assert(size == ySet.size());
 
@@ -32,9 +32,8 @@ void Model::train(std::vector<matrix>& XSet, std::vector<matrix>& ySet, double* 
             currLayer.feedForward(*this, prevLayer);
         }
         Layer &outputLayer = *layers.back();
-        matrix l2Error = y - outputLayer.outputValues;
-        outputLayer.gradients.push_back(matrix::mbe(l2Error, Utils::sigmoidOutputToDerivative(outputLayer.outputValues)));
-        //Utils::print(l2Error);
+        matrix outputLayerError = y - outputLayer.outputValues;
+        outputLayer.gradients.push_back(matrix::mbe(outputLayerError, Utils::sigmoidOutputToDerivative(outputLayer.outputValues)));
 
         error = 0.0;
         for (int n = 0; n < outputLayer.outputValues.numColumns; n++) {
@@ -47,9 +46,8 @@ void Model::train(std::vector<matrix>& XSet, std::vector<matrix>& ySet, double* 
         recentAverageError =
                 (recentAverageError * recentAverageSmoothingFactor + error) / (recentAverageSmoothingFactor + 1.0);
 
+        predicted[i] = outputLayer.outputValues[0][0];
         outputValues = &outputLayer.outputValues;
-
-        predicted[i] = (*outputValues)[0][0];
     }
 
     for (unsigned int step = 0; step < size; step++) {
@@ -99,14 +97,34 @@ void Layer::feedForward(Model &model, Layer &prevLayer) {
     outputValues = Utils::sigmoid(prevLayer.outputValues*prevLayer.W + 1.0*prevLayer.b);
 }
 
+// TODO: check this working!
 void Layer::backPropagate(Model &model, Layer &nextLayer, const unsigned int& step) {
-
+    matrix l0 = outputValues;
+    RNNLayer* rnnLayer;
+    Layer* layer = &nextLayer;
+    matrix outputGradient(0,0);
+    if ((rnnLayer = dynamic_cast<RNNLayer*>(layer)) != nullptr) {
+        outputGradient = rnnLayer->gradientMemoryW;
+    } else {
+        outputGradient = nextLayer.gradients[step];
+    }
+    updateW += model.eta * l0.transposed()*outputGradient;
+    updateB += (1.0 * matrix::mbe(b, outputGradient));
 }
 
 void Layer::backPropagate(Model &model, Layer &nextLayer, matrix &XSet, const unsigned int &step) {
-    matrix l0 = XSet;
-    updateW += model.eta * l0.transposed()*((RNNLayer&)nextLayer).gradientMemoryW;
-    updateB += (1.0 * matrix::mbe(b, ((RNNLayer&)nextLayer).gradientMemoryW));
+    // Output Values on input layer
+    matrix ov0 = XSet;
+    RNNLayer* rnnLayer;
+    Layer* layer = &nextLayer;
+    matrix outputGradient(0,0);
+    if ((rnnLayer = dynamic_cast<RNNLayer*>(layer)) != nullptr) {
+        outputGradient = rnnLayer->gradientMemoryW;
+    } else {
+        outputGradient = nextLayer.gradients[step];
+    }
+    updateW += model.eta * ov0.transposed()*outputGradient;
+    updateB += (1.0 * matrix::mbe(b, outputGradient));
 }
 
 RNNLayer::RNNLayer(const unsigned int in, const unsigned int out, int capacity) :
@@ -128,15 +146,15 @@ void RNNLayer::backPropagate(Model &model, Layer &nextLayer, const unsigned int&
         outputGradient = rnnLayer->gradientMemoryW;
     } else {
         outputGradient = nextLayer.gradients[step];
-
     }
-    matrix& l1 = prevOutputValues[step + 1];
-    matrix& pl1 = prevOutputValues[step];
+    // Output & Previous Output Values on hidden (RNN) layer
+    matrix& ov = prevOutputValues[step + 1];
+    matrix& prevov = prevOutputValues[step];
 
-    updateW += model.eta * l1.transposed() * outputGradient;
+    updateW += model.eta * ov.transposed() * outputGradient;
     updateB += (1.0 * matrix::mbe(b, outputGradient));
-    matrix hiddenGradient = matrix::mbe((gradientMemoryW*memoryW.transposed() + outputGradient*W.transposed()), Utils::sigmoidOutputToDerivative(l1));
-    updateMemoryW += model.eta * pl1.transposed()*hiddenGradient;
+    matrix hiddenGradient = matrix::mbe((gradientMemoryW*memoryW.transposed() + outputGradient*W.transposed()), Utils::sigmoidOutputToDerivative(ov));
+    updateMemoryW += model.eta * prevov.transposed()*hiddenGradient;
     gradientMemoryW = hiddenGradient;
 
 }

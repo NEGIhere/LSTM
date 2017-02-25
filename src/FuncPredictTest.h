@@ -9,6 +9,8 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <cmath>
 #include "utils/Config.h"
+#include "Model.h"
+#include "utils/DataSet.h"
 
 class FuncPredictTest {
 public:
@@ -20,6 +22,14 @@ public:
     static double inline function(double x) {
         return cos(x / SCREEN_WIDTH * 10) * SCREEN_HEIGHT / 3 + SCREEN_HEIGHT / 2;
     }
+private:
+    static const int trainSamplesCount = 10;
+    double predicted[trainSamplesCount];
+    std::vector<double> /*trainSetX, trainSetY,*/ trainSetPredicted;
+    //double setXMin, setXMax, setYMin, setYMax;
+    DataSet trainSet;
+    Model model;
+    sf::Font font;
 };
 
 

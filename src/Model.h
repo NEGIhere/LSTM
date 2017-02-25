@@ -44,7 +44,7 @@ class Model {
 public:
     Model(double learningRate, double momentum);
     void addLayer(Layer* layer);
-    void train(std::vector<matrix>& XSet, std::vector<matrix>& ySet, double* predicted, unsigned int predictedCount);
+    void train(std::vector<matrix>& XSet, std::vector<matrix>& ySet, double* predicted);
     matrix getOutputValues();
     ~Model();
 private:

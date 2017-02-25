@@ -33,8 +33,6 @@ RNNTest::RNNTest() {
     model.addLayer(new RNNLayer(16,1, 8));
     model.addLayer(new Layer(1,1));
 
-    srand(20);
-
     for (int i = 0; i < 50000; i++) {
         int a_int = Utils::randInt(0, (int) ceil(largestNum / 2.0));
         int b_int = Utils::randInt(0, (int) ceil(largestNum / 2.0));
@@ -43,7 +41,7 @@ RNNTest::RNNTest() {
         int *a = int2bin[a_int];
         int *b = int2bin[b_int];
         int *c = int2bin[c_int];
-        int *d = new int[binaryDim];
+        double *d = new double[binaryDim];
 
         std::vector<matrix> XSet;
         XSet.reserve((unsigned long)binaryDim);
@@ -66,7 +64,7 @@ RNNTest::RNNTest() {
 
         if (i % 1000 == 0) {
             Utils::print(std::string("Error:") + std::to_string(model.getRecentAverageError()));
-            Utils::print(std::string("Pred:") + std::to_string(d[0]) + std::to_string(d[1]) + std::to_string(d[2]) + std::to_string(d[3]) + std::to_string(d[4]) + std::to_string(d[5]) + std::to_string(d[6]) + std::to_string(d[7]));
+            Utils::print(std::string("Pred:") + std::to_string(std::round(d[0])) + std::to_string(std::round(d[1])) + std::to_string(std::round(d[2])) + std::to_string(std::round(d[3])) + std::to_string(std::round(d[4])) + std::to_string(std::round(d[5])) + std::to_string(std::round(d[6])) + std::to_string(std::round(d[7])));
             Utils::print(std::string("True:") + std::to_string(c[0]) + std::to_string(c[1]) + std::to_string(c[2]) + std::to_string(c[3]) + std::to_string(c[4]) + std::to_string(c[5]) + std::to_string(c[6]) + std::to_string(c[7]));
             int out = 0;
             for (int j = binaryDim - 1; j >= 0; j--) {
@@ -74,8 +72,6 @@ RNNTest::RNNTest() {
             }
             Utils::print(std::to_string(a_int) + " + " + std::to_string(b_int) + " = " + std::to_string(out));
         }
-
-        //model.BPTT();
     }
 #else
     std::vector<double> results;

@@ -44,13 +44,11 @@ class Model {
 public:
     Model(double learningRate, double momentum);
     void addLayer(Layer* layer);
-    void train(std::vector<matrix>& XSet, std::vector<matrix>& ySet, int* predicted, unsigned int predictedCount);
-    void BPTT();
+    void train(std::vector<matrix>& XSet, std::vector<matrix>& ySet, double* predicted, unsigned int predictedCount);
     matrix getOutputValues();
     ~Model();
 private:
     std::vector<Layer*> layers;
-    //Layer outputLayer;
     matrix* outputValues;
     int recurrentSteps = 0;
     double alpha = 0.3f;

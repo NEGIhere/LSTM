@@ -15,7 +15,7 @@ void Model::addLayer(Layer* layer) {
     layers.push_back(layer);
 }
 
-void Model::train(std::vector<matrix>& XSet, std::vector<matrix>& ySet, int* predicted, unsigned int predictedCount) {
+void Model::train(std::vector<matrix>& XSet, std::vector<matrix>& ySet, double* predicted, unsigned int predictedCount) {
     const unsigned int size = (unsigned int)XSet.size();
     assert(size == ySet.size());
 
@@ -24,7 +24,7 @@ void Model::train(std::vector<matrix>& XSet, std::vector<matrix>& ySet, int* pre
         matrix& y = ySet[i];
 
         Layer &inputLayer = *layers[0];
-        inputLayer.outputValues = X * inputLayer.W;
+        inputLayer.outputValues = X;// * inputLayer.W;
 
         for (int j = 1; j < layers.size(); j++) {
             Layer &prevLayer = *layers[j - 1];
@@ -49,8 +49,7 @@ void Model::train(std::vector<matrix>& XSet, std::vector<matrix>& ySet, int* pre
 
         outputValues = &outputLayer.outputValues;
 
-        double &x = (*outputValues)[0][0];
-        predicted[i] = (int)std::round(x);
+        predicted[i] = (*outputValues)[0][0];
     }
 
     for (unsigned int step = 0; step < size; step++) {
@@ -91,12 +90,6 @@ matrix Model::getOutputValues() {
     return *outputValues;
 }
 
-/// Back Propagation Through Time
-void Model::BPTT() {
-
-}
-
-
 Layer::Layer(const unsigned int in, const unsigned int out) :
         W(2.0 * matrix::random::rand(in,out) - 1.0), deltaW(in,out), b(2.0 * matrix::random::rand(1,out) - 1.0), deltaB(1,out),
         outputValues(1,in), updateW(W.numRows, W.numColumns), updateB(b.numRows, b.numColumns) {
@@ -105,23 +98,7 @@ Layer::Layer(const unsigned int in, const unsigned int out) :
 void Layer::feedForward(Model &model, Layer &prevLayer) {
     outputValues = Utils::sigmoid(prevLayer.outputValues*prevLayer.W + 1.0*prevLayer.b);
 }
-/*
-    RNNLayer& hidden = (RNNLayer&)*layers[1];
-    matrix& pl1 = hidden.prevOutputValues[size - step - 1];
 
-    matrix outputGradient = layers.back()->gradients[size - step - 1];
-    matrix& l1 = hidden.prevOutputValues[size - step];
-    hidden.updateW += eta * l1.transposed() * outputGradient;                        !
-    hidden.updateB += (1.0 * matrix::mbe(hidden.b, outputGradient));                  !
-    matrix hiddenGradient = matrix::mbe((hidden.gradientMemoryW*hidden.memoryW.transposed() + outputGradient*hidden.W.transposed()), Utils::sigmoidOutputToDerivative(l1));
-    hidden.updateMemoryW += eta * pl1.transposed()*hiddenGradient;
-    hidden.gradientMemoryW = hiddenGradient;
-
-    Layer& input = *layers[0];
-    matrix l0 = matrix(XSet[size - step - 1]);
-    input.updateW += eta * l0.transposed()*hiddenGradient;
-    input.updateB += (1.0 * matrix::mbe(input.b, hiddenGradient));
-*/
 void Layer::backPropagate(Model &model, Layer &nextLayer, const unsigned int& step) {
 
 }
@@ -138,14 +115,21 @@ RNNLayer::RNNLayer(const unsigned int in, const unsigned int out, int capacity) 
 }
 
 void RNNLayer::feedForward(Model& model, Layer &prevLayer) {
-    outputValues = Utils::sigmoid(prevLayer.outputValues + prevOutputValues.back()*memoryW + 1.0*prevLayer.b);
+    outputValues = Utils::sigmoid(prevLayer.outputValues*prevLayer.W + prevOutputValues.back()*memoryW + 1.0*prevLayer.b);
     prevOutputValues.push_back(outputValues);
     model.recurrentSteps++;
 }
 
 void RNNLayer::backPropagate(Model &model, Layer &nextLayer, const unsigned int& step) {
-    //Layer::backPropagate(model, nextLayer);
-    matrix outputGradient = nextLayer.gradients[step];
+    RNNLayer* rnnLayer;
+    Layer* layer = &nextLayer;
+    matrix outputGradient(1,1);
+    if ((rnnLayer = dynamic_cast<RNNLayer*>(layer)) != nullptr) {
+        outputGradient = rnnLayer->gradientMemoryW;
+    } else {
+        outputGradient = nextLayer.gradients[step];
+
+    }
     matrix& l1 = prevOutputValues[step + 1];
     matrix& pl1 = prevOutputValues[step];
 

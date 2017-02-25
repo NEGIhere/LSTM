@@ -16,7 +16,7 @@ public:
     static const unsigned int DOTS = 35;
     void update();
     void draw(sf::RenderWindow& window);
-
+    void train();
     static double inline function(double x) {
         return cos(x / SCREEN_WIDTH * 10) * SCREEN_HEIGHT / 3 + SCREEN_HEIGHT / 2;
     }

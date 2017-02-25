@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="LSTM (Optimized)" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="LSTM" TARGET_NAME="LSTM" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="LSTM" RUN_TARGET_NAME="LSTM">
+    <envs />
+    <method />
+  </configuration>
+</component>

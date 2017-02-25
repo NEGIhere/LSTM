@@ -20,15 +20,12 @@ void draw() {
 }
 
 int main() {
-    matrix mat = 2 * matrix::random::rand(4,4) - 1.0;
-    //Utils::print(mat);
-    double (*func)(double x) = &Utils::sigmoid;
-
-    srand(1); //
-    RNNTest* rnn = new RNNTest();
+    srand(1);
+    //RNNTest* rnn = new RNNTest();
 
     bool rendering = true;
     test = new FuncPredictTest();
+    test->train();
     sf::ContextSettings settings;
     settings.antialiasingLevel = 0;
 

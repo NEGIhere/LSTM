@@ -43,12 +43,12 @@ double Utils::sigmoidOutputToDerivative(double output) {
     return output * (1 - output);
 }
 
-double Utils::transferFunction(double x) {
+double Utils::tanhFunction(double x) {
     return tanh(x);
 }
 
-double Utils::transferFunctionDerivative(double x) {
-    return 1.0 - tanh(x) * tanh(x); //1.0 - x * x
+double Utils::tanhOutputToDerivative(double x) {
+    return (1.0 - x * x); // 1.0 - x * x
 }
 
 matrix Utils::sigmoid(matrix x) {
@@ -60,21 +60,23 @@ matrix Utils::sigmoid(matrix x) {
     return x;
 }
 
-matrix Utils::transferFunction(matrix x) {
+matrix Utils::tanhFunction(matrix x) {
     for (auto& r : x.elements) {
         for (auto& c : r) {
-            c = transferFunction(c);
+            c = tanhFunction(c);
         }
     }
-    return x;}
+    return x;
+}
 
-matrix Utils::transferFunctionDerivative(matrix x) {
+matrix Utils::tanhOutputToDerivative(matrix x) {
     for (auto& r : x.elements) {
         for (auto& c : r) {
-            c = transferFunctionDerivative(c);
+            c = tanhOutputToDerivative(c);
         }
     }
-    return x;}
+    return x;
+}
 
 matrix Utils::sigmoidDerivative(matrix x) {
     for (auto& r : x.elements) {

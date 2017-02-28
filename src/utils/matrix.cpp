@@ -70,6 +70,35 @@ matrix matrix::mbe(matrix m0, matrix m1) {
     return m0;
 }
 
+matrix matrix::hstack(matrix m0, matrix m1) {
+    assert(m0.numRows == m1.numRows);
+    matrix m2(m0.numRows, m0.numColumns + m1.numColumns);
+    for (int i = 0; i < m2.numRows; i++) {
+        int j = 0;
+        for (; j < m0.numColumns; j++) {
+            m2.elements[i][j] = m0.elements[i][j];
+        }
+        for (; j < m2.numColumns; j++) {
+            m2.elements[i][j] = m1.elements[i][j - m0.numColumns];
+        }
+    }
+    return m0;
+}
+
+// TODO: create 'vstack'
+matrix matrix::vstack(matrix m0, matrix m1) {
+    assert(m0.numColumns == m1.numColumns);
+    matrix m2(m0.numRows + m1.numRows, m0.numColumns);
+
+    return m1;
+}
+
+// TODO: create 'outer'
+matrix matrix::outer(matrix m0, matrix m1) {
+
+    return m0;
+}
+
 matrix& matrix::add(const double num) {
     for (auto& r : elements) {
         for (auto& c : r) {

@@ -7,7 +7,7 @@
 
 Model::Model(double learningRate, double momentum) {
     eta = learningRate;
-    alpha = momentum;
+    mu = (1.0 - momentum);
     outputValues = nullptr;
 }
 
@@ -33,7 +33,7 @@ void Model::train(std::vector<matrix>& XSet, std::vector<matrix>& ySet, double* 
         }
         Layer &outputLayer = *layers.back();
         matrix outputLayerError = y - outputLayer.outputValues;
-        outputLayer.gradients.push_back(matrix::mbe(outputLayerError, Utils::sigmoidOutputToDerivative(outputLayer.outputValues)));
+        outputLayer.gradients.push_back(matrix::mbe(outputLayerError, Utils::tanhOutputToDerivative(outputLayer.outputValues)));
 
         error = 0.0;
         for (int n = 0; n < outputLayer.outputValues.numColumns; n++) {
@@ -65,14 +65,16 @@ void Model::train(std::vector<matrix>& XSet, std::vector<matrix>& ySet, double* 
     recurrentSteps = 0;
     for(std::vector<Layer*>::iterator it = layers.begin(); it != layers.end(); it++) {
         Layer* layer = *it;
-        layer->W += layer->updateW * alpha;
-        layer->b += layer->updateB * alpha;
+        layer->v = layer->v * mu + layer->updateW * eta;
+        layer->W += layer->v;
+        layer->b += layer->updateB * eta;
         layer->updateW *= 0;
         layer->updateB *= 0;
 
         RNNLayer* rnnLayer;
         if ((rnnLayer = dynamic_cast<RNNLayer*>(*it)) != nullptr) {
-            rnnLayer->memoryW += rnnLayer->updateMemoryW * alpha;
+            rnnLayer->memoryV = rnnLayer->memoryV * mu + rnnLayer->updateMemoryW * eta;
+            rnnLayer->memoryW += rnnLayer->memoryV; // eta * rnnLayer->updateMemoryW;//
             rnnLayer->updateMemoryW *= 0;
 
             rnnLayer->prevOutputValues.clear();
@@ -89,15 +91,15 @@ matrix Model::getOutputValues() {
 }
 
 Layer::Layer(const unsigned int in, const unsigned int out) :
-        W(2.0 * matrix::random::rand(in,out) - 1.0), deltaW(in,out), b(2.0 * matrix::random::rand(1,out) - 1.0), deltaB(1,out),
-        outputValues(1,in), updateW(W.numRows, W.numColumns), updateB(b.numRows, b.numColumns) {
+        type(HIDDEN), W(matrix::random::rand(in,out) - 0.5), deltaW(in,out), b(matrix::random::rand(1,out) - 0.5), deltaB(1,out),
+        outputValues(1,in), updateW(W.numRows, W.numColumns), v(W.numRows, W.numColumns), updateB(b.numRows, b.numColumns) {
 }
 
 void Layer::feedForward(Model &model, Layer &prevLayer) {
-    outputValues = Utils::sigmoid(prevLayer.outputValues*prevLayer.W + 1.0*prevLayer.b);
+    outputValues = Utils::tanhFunction(prevLayer.outputValues*prevLayer.W + 1.0*prevLayer.b);
 }
 
-// TODO: check this working!
+// TODO: check this working with basic layer!
 void Layer::backPropagate(Model &model, Layer &nextLayer, const unsigned int& step) {
     matrix l0 = outputValues;
     RNNLayer* rnnLayer;
@@ -108,8 +110,10 @@ void Layer::backPropagate(Model &model, Layer &nextLayer, const unsigned int& st
     } else {
         outputGradient = nextLayer.gradients[step];
     }
+    // TODO: momentum
+    //v = v*model.mu + l0.transposed()*outputGradient;
     updateW += model.eta * l0.transposed()*outputGradient;
-    updateB += (1.0 * matrix::mbe(b, outputGradient));
+    updateB += model.eta * matrix::mbe(b, outputGradient);
 }
 
 void Layer::backPropagate(Model &model, Layer &nextLayer, matrix &XSet, const unsigned int &step) {
@@ -123,17 +127,20 @@ void Layer::backPropagate(Model &model, Layer &nextLayer, matrix &XSet, const un
     } else {
         outputGradient = nextLayer.gradients[step];
     }
+    // TODO: momentum
+    //v = v*model.mu + ov0.transposed()*outputGradient;
     updateW += model.eta * ov0.transposed()*outputGradient;
-    updateB += (1.0 * matrix::mbe(b, outputGradient));
+    updateB += model.eta * matrix::mbe(b, outputGradient);
 }
 
 RNNLayer::RNNLayer(const unsigned int in, const unsigned int out, int capacity) :
-        Layer::Layer(in, out), memoryW(2.0 * matrix::random::rand(in, in) - 1.0), capacity(capacity), updateMemoryW(memoryW.numRows, memoryW.numColumns), gradientMemoryW(1,in) {
+        Layer::Layer(in, out), type(RECURRENT), memoryW(matrix::random::rand(in, in) - 0.5), capacity(capacity), updateMemoryW(memoryW.numRows, memoryW.numColumns),
+        memoryV(memoryW.numRows, memoryW.numColumns), gradientMemoryW(1,in) {
     prevOutputValues.push_back(matrix(1, in));
 }
 
 void RNNLayer::feedForward(Model& model, Layer &prevLayer) {
-    outputValues = Utils::sigmoid(prevLayer.outputValues*prevLayer.W + prevOutputValues.back()*memoryW + 1.0*prevLayer.b);
+    outputValues = Utils::tanhFunction(prevLayer.outputValues*prevLayer.W + prevOutputValues.back()*memoryW + 1.0*prevLayer.b);
     prevOutputValues.push_back(outputValues);
     model.recurrentSteps++;
 }
@@ -150,13 +157,30 @@ void RNNLayer::backPropagate(Model &model, Layer &nextLayer, const unsigned int&
     // Output & Previous Output Values on hidden (RNN) layer
     matrix& ov = prevOutputValues[step + 1];
     matrix& prevov = prevOutputValues[step];
-
+    // TODO: momentum
+    //v = v * model.mu + ov.transposed() * outputGradient;
     updateW += model.eta * ov.transposed() * outputGradient;
-    updateB += (1.0 * matrix::mbe(b, outputGradient));
-    matrix hiddenGradient = matrix::mbe((gradientMemoryW*memoryW.transposed() + outputGradient*W.transposed()), Utils::sigmoidOutputToDerivative(ov));
+    updateB += model.eta * matrix::mbe(b, outputGradient);
+    matrix hiddenGradient = matrix::mbe((gradientMemoryW*memoryW.transposed() + outputGradient*W.transposed()), Utils::tanhOutputToDerivative(ov));
+    //memoryV = memoryV * model.mu + prevov.transposed()*hiddenGradient;
     updateMemoryW += model.eta * prevov.transposed()*hiddenGradient;
     gradientMemoryW = hiddenGradient;
 
+}
+
+LSTMLayer::LSTMLayer(const unsigned int in, const unsigned int out, int capacity) :
+        RNNLayer(in, out, capacity), type(LSTM),
+        forgetW(matrix::random::rand(in, in) - 0.5), updateForgetW(forgetW.numRows, forgetW.numColumns), gradientForgetW(1,in),
+        forgetB(matrix::random::rand(1,out) - 0.5), deltaForgetB(1,out), updateForgetB(forgetB.numRows, forgetB.numColumns) {
+
+}
+
+void LSTMLayer::feedForward(Model &model, Layer &prevLayer) {
+    RNNLayer::feedForward(model, prevLayer);
+}
+
+void LSTMLayer::backPropagate(Model &model, Layer &nextLayer, const unsigned int &step) {
+    RNNLayer::backPropagate(model, nextLayer, step);
 }
 
 Model::~Model() {

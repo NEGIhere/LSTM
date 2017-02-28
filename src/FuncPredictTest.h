@@ -15,7 +15,7 @@
 class FuncPredictTest {
 public:
     FuncPredictTest();
-    static const unsigned int DOTS = 35;
+    static const unsigned int DOTS = 35 * 2;
     void update();
     void draw(sf::RenderWindow& window);
     void train();
@@ -23,13 +23,14 @@ public:
         return cos(x / SCREEN_WIDTH * 10) * SCREEN_HEIGHT / 3 + SCREEN_HEIGHT / 2;
     }
 private:
-    static const int trainSamplesCount = 10;
+    static const int trainSamplesCount = 8;
     double predicted[trainSamplesCount];
     std::vector<double> /*trainSetX, trainSetY,*/ trainSetPredicted;
     //double setXMin, setXMax, setYMin, setYMax;
     DataSet trainSet;
-    Model model;
     sf::Font font;
+    sf::Text text;
+    Model model;
 };
 
 

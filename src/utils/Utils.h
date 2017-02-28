@@ -62,10 +62,10 @@ public:
 
     static double sigmoid(double x);
     static matrix sigmoid(matrix x);
-    static double transferFunction(double x);
-    static matrix transferFunction(matrix x);
-    static double transferFunctionDerivative(double x);
-    static matrix transferFunctionDerivative(matrix x);
+    static double tanhFunction(double x);
+    static matrix tanhFunction(matrix x);
+    static double tanhOutputToDerivative(double x);
+    static matrix tanhOutputToDerivative(matrix x);
     static double sigmoidDerivative(double x);
     static matrix sigmoidDerivative(matrix x);
     static double sigmoidOutputToDerivative(double output);

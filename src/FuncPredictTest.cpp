@@ -4,15 +4,20 @@
 
 #include <iostream>
 #include <SFML/Graphics/Text.hpp>
+#include <chrono>
 #include "FuncPredictTest.h"
 
+std::chrono::high_resolution_clock::time_point t0 = std::chrono::high_resolution_clock::now();
+std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+unsigned long iters = 0;
+
 FuncPredictTest::FuncPredictTest() :
-        model(0.3, 1.8), trainSet(DOTS) {
-    if (!font.loadFromFile("res/Roboto-Regular.ttf")) {
+        model(0.07, 0.85), trainSet(DOTS) {
+    if (!font.loadFromFile("res/Consolas.ttf")) {
         exit(EXIT_FAILURE);
     }
-    model.addLayer(new Layer(1,34));
-    model.addLayer(new RNNLayer(34,8, trainSamplesCount));
+    model.addLayer(new Layer(1,31));
+    model.addLayer(new RNNLayer(31,8, trainSamplesCount));
     model.addLayer(new RNNLayer(8,1, trainSamplesCount));
     model.addLayer(new Layer(1,1));
 
@@ -24,10 +29,15 @@ FuncPredictTest::FuncPredictTest() :
         trainSet.add(x, y);
     }
     trainSet.normalize();
+    text = sf::Text("", font);
+    text.setPosition(8, 1);
+    text.setScale(sf::Vector2f(0.7f,0.7f));
+    text.setColor(sf::Color::Black);
 }
 
 void FuncPredictTest::train() {
 }
+
 
 void FuncPredictTest::update() {
     for (int i = 0; i < 10; i++) {
@@ -48,12 +58,14 @@ void FuncPredictTest::update() {
         }
 
         model.train(XSet, YSet, predicted);
+        iters++;
 
         for (int j = 0; j < trainSamplesCount; j++) {
             trainSetPredicted[r + j] += (predicted[j] - trainSetPredicted[r + j]) * 0.1;
         }
     }
 }
+
 
 void FuncPredictTest::draw(sf::RenderWindow& window) {
     if (DOTS < 3) {
@@ -104,8 +116,7 @@ void FuncPredictTest::draw(sf::RenderWindow& window) {
 
     window.draw(line, DOTS, sf::Lines);
     window.draw(linePredicted, DOTS, sf::Lines);
-    sf::Text text("Loss:" + sf::String(std::to_string(model.getRecentAverageError())), font);
-    text.setPosition(10, 10);
-    text.setColor(sf::Color::Black);
+    long elapsedSeconds = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - t0).count();
+    text.setString("Loss:" + sf::String(std::to_string(model.getRecentAverageError())) + ", eta:" + sf::String(std::to_string(model.eta)) + ", mu:" + sf::String(std::to_string(1.0 - model.mu)) + "\nSecs:" + sf::String(std::to_string(elapsedSeconds)) + ", Iters:" + sf::String(std::to_string(iters)));
     window.draw(text);
 }

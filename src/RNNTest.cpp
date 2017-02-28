@@ -19,13 +19,13 @@ RNNTest::RNNTest() {
 
         int num = i;
         for (int j = binaryDim - 1; j >= 0; --j) {
-            int2bin[i][j] = num % 2;
+            int2bin[i][j] = (num % 2);
             num /= 2;
         }
     }
 
 #undef MODEL
-#define MODEL
+//#define MODEL
 
 #ifdef MODEL
     Model model = Model(1.5, 0.3);
@@ -77,15 +77,14 @@ RNNTest::RNNTest() {
     std::vector<double> results;
 
     matrix s0 = 2.0 * matrix::random::rand(2,16) - 1.0;
+
     matrix b0 = 2.0 * matrix::random::rand(1,16) - 1.0;
-    //double b0 = Utils::randDouble(-1, 1);
-    //double b1 = Utils::randDouble(-1, 1);
     matrix s1 = 2.0 * matrix::random::rand(16,1) - 1.0;
     matrix b1 = 2.0 * matrix::random::rand(1,1) - 1.0;
-    matrix sm = 2.0 * matrix::random::rand(16,16) - 1.0;
+    matrix sm = 1.0 * matrix::random::rand(16,16) - 0.5;
 
-    const double alpha = 0.3f;
-    const double eta = 1.5f;
+    const double eta = 0.1;
+    const double mu = 0.05;
 
     double overallError = 0;
     double error, recentAverageError = 0;
@@ -119,11 +118,14 @@ RNNTest::RNNTest() {
             matrix y = matrix(1,1);
             y[0][0] = c[binaryDim - 1 - pos];
 
-            matrix l1 = Utils::sigmoid(X*s0 + l1Values.back()*sm + 1.0*b0);
-            matrix l2 = Utils::sigmoid(l1*s1 + 1.0*b1);
+            matrix l1 = Utils::tanhFunction(X*s0 + l1Values.back()*sm + 1.0*b0);
+            matrix l2 = Utils::tanhFunction(l1*s1+ 1.0*b1);
 
-            matrix l2Error = y - l2;
-            l2Deltas.push_back(matrix::mbe(l2Error, Utils::sigmoidOutputToDerivative(l2)));
+            double &x = l2[0][0];
+            double yy = y[0][0];
+            matrix l2Error = matrix(1,1);
+            l2Error[0][0] = yy - x; //0.5*((yy - x)*(yy - x));
+            l2Deltas.push_back(matrix::mbe(l2Error, Utils::tanhOutputToDerivative(l2)));
 
             //overallError += std::abs(l2Error.elements[0][0]);
             error = 0.0;
@@ -136,8 +138,7 @@ RNNTest::RNNTest() {
 
             recentAverageError = (recentAverageError * recentAverageSmoothingFactor + error) / (recentAverageSmoothingFactor + 1.0);
 
-            double &x = l2[0][0];
-            predicted[binaryDim - pos - 1] = (int)std::round(x);
+            predicted[binaryDim - pos - 1] = (int)std::round(x); //(x < 0 ? -1 : 1);
             l1Values.push_back(l1);
         }
 
@@ -147,29 +148,27 @@ RNNTest::RNNTest() {
             matrix prevL1 = l1Values[binaryDim - pos - 1];
 
             matrix l2Delta = l2Deltas[binaryDim - pos - 1];
-            s1Update += eta * l1.transposed() * l2Delta;
+            s1Update += l1.transposed() * l2Delta;
             b1Update += (1.0 * matrix::mbe(b1, l2Delta));
 
-            matrix l1Delta = matrix::mbe((futureL1Delta*sm.transposed() + l2Delta*s1.transposed()), Utils::sigmoidOutputToDerivative(l1));
+            matrix l1Delta = matrix::mbe((futureL1Delta*sm.transposed() + l2Delta*s1.transposed()), Utils::tanhOutputToDerivative(l1));
 
             futureL1Delta = l1Delta;
 
-            s0Update += eta * l0.transposed()*l1Delta;
-            //Utils::print(l0.transposed());
-
+            s0Update += l0.transposed()*l1Delta;
             b0Update += (1.0 * matrix::mbe(b0, l1Delta));
-            smUpdate += eta * prevL1.transposed()*l1Delta;
+            smUpdate += prevL1.transposed()*l1Delta;
 
         }
         //Utils::print("\n");
 
-        s0 += s0Update * alpha;
-        b0 += b0Update * alpha;
+        s0 += s0Update * eta;
+        b0 += b0Update * eta;
 
-        sm += smUpdate * alpha;
+        sm += smUpdate * eta;
 
-        s1 += s1Update * alpha;
-        b1 += b1Update * alpha;
+        s1 += s1Update * eta;
+        b1 += b1Update * eta;
 
         s0Update *= 0;
         s1Update *= 0;

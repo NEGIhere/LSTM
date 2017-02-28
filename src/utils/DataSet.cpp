@@ -33,8 +33,8 @@ void DataSet::add(const double x, const double y) {
 
 void DataSet::normalize() {
     for (int i = 0; i < setX.size(); i++) {
-        setX[i] = (setX[i] - setXMin) / (setXMax - setXMin);
-        setY[i] = (setY[i] - setYMin) / (setYMax - setYMin);
+        setX[i] = ((setX[i] - setXMin) / (setXMax - setXMin)) * 2.0 - 1.0;
+        setY[i] = ((setY[i] - setYMin) / (setYMax - setYMin)) * 2.0 - 1.0;
     }
 }
 
@@ -43,13 +43,13 @@ double &DataSet::operator[](const unsigned int i) {
 }
 
 double DataSet::unpackX(const unsigned int& i) {
-    return setX[i] * (setXMax - setXMin) + setXMin;
+    return ((setX[i] + 1.0) / 2.0) * (setXMax - setXMin) + setXMin;
 }
 
 double DataSet::unpackY(const unsigned int& i) {
-    return setY[i] * (setYMax - setYMin) + setYMin;
+    return ((setY[i] + 1.0) / 2.0) * (setYMax - setYMin) + setYMin;
 }
 
 double DataSet::unpack(double value) {
-    return value * (setYMax - setYMin) + setYMin;
+    return ((value + 1.0) / 2.0) * (setYMax - setYMin) + setYMin;
 }

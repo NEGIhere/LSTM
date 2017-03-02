@@ -27,9 +27,10 @@ set(SOURCE_FILES
 
 add_executable(LSTM ${SOURCE_FILES})
 
-
 if (UNIX)
     target_link_libraries(LSTM sfml-system sfml-graphics sfml-window)
+    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lstdc++fs")
+    target_link_libraries(LSTM stdc++fs)
 elseif (WIN32)
     set(SFML_ROOT "E:/Development/CPP/SFML-master")
     set(CMAKE_MODULE_PATH "${SFML_ROOT}/cmake/Modules" ${CMAKE_MODULE_PATH})

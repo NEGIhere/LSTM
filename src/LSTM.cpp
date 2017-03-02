@@ -20,8 +20,18 @@ void draw() {
 }
 
 int main() {
-    srand(1);
-    //RNNTest* rnn = new RNNTest();
+    srand(1);/*
+    matrix A = matrix({
+                {1,2,3},
+                {4,5,6}
+    });
+    matrix B = matrix({
+                {4,5,6},
+                {7,8,9}
+    });
+
+    Utils::print(matrix::hstack(A,B));*/
+    RNNTest* rnn = new RNNTest();
 
     bool rendering = true;
     test = new FuncPredictTest();

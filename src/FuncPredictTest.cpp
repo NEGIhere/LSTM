@@ -33,6 +33,7 @@ FuncPredictTest::FuncPredictTest() :
     text.setPosition(8, 1);
     text.setScale(sf::Vector2f(0.7f,0.7f));
     text.setColor(sf::Color::Black);
+
 }
 
 void FuncPredictTest::train() {

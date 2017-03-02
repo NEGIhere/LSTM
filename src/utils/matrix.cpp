@@ -15,7 +15,7 @@ matrix::matrix(const std::vector<std::vector<double>> &elements)
         : elements(elements), numRows((int)elements.size()), numColumns((int)elements[0].size()) {
 }
 
-matrix& matrix::dot(const matrix& other) {
+matrix matrix::dot(const matrix& other) {
     assert(numColumns == other.numRows);
 
     std::vector<std::vector<double>> data(numRows, std::vector<double>(other.numColumns));
@@ -82,7 +82,7 @@ matrix matrix::hstack(matrix m0, matrix m1) {
             m2.elements[i][j] = m1.elements[i][j - m0.numColumns];
         }
     }
-    return m0;
+    return m2;
 }
 
 // TODO: create 'vstack'
@@ -90,7 +90,7 @@ matrix matrix::vstack(matrix m0, matrix m1) {
     assert(m0.numColumns == m1.numColumns);
     matrix m2(m0.numRows + m1.numRows, m0.numColumns);
 
-    return m1;
+    return m2;
 }
 
 // TODO: create 'outer'
@@ -128,8 +128,8 @@ matrix& matrix::sub(const double num) {
     return *this;
 }
 
-matrix& matrix::operator*=(const matrix& other) {
-    return dot(other);
+matrix matrix::operator*=(const matrix& other) {
+    return (*this).dot(other);
 }
 
 matrix& matrix::operator*=(const double num) {

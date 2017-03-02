@@ -25,12 +25,13 @@ RNNTest::RNNTest() {
     }
 
 #undef MODEL
-//#define MODEL
+#define MODEL
 
 #ifdef MODEL
-    Model model = Model(1.5, 0.3);
+    Model model = Model(0.1, 0.9);
     model.addLayer(new Layer(2,16));
-    model.addLayer(new RNNLayer(16,1, 8));
+    model.addLayer(new LSTMLayer(2,16,1, 8));
+    //model.addLayer(new RNNLayer(16,1, 8));
     model.addLayer(new Layer(1,1));
 
     for (int i = 0; i < 50000; i++) {
@@ -64,7 +65,7 @@ RNNTest::RNNTest() {
 
         if (i % 1000 == 0) {
             Utils::print(std::string("Error:") + std::to_string(model.getRecentAverageError()));
-            Utils::print(std::string("Pred:") + std::to_string(std::round(d[0])) + std::to_string(std::round(d[1])) + std::to_string(std::round(d[2])) + std::to_string(std::round(d[3])) + std::to_string(std::round(d[4])) + std::to_string(std::round(d[5])) + std::to_string(std::round(d[6])) + std::to_string(std::round(d[7])));
+            Utils::print(std::string("Pred:") + std::to_string((int)std::round(d[0])) + std::to_string((int)std::round(d[1])) + std::to_string((int)std::round(d[2])) + std::to_string((int)std::round(d[3])) + std::to_string((int)std::round(d[4])) + std::to_string((int)std::round(d[5])) + std::to_string((int)std::round(d[6])) + std::to_string((int)std::round(d[7])));
             Utils::print(std::string("True:") + std::to_string(c[0]) + std::to_string(c[1]) + std::to_string(c[2]) + std::to_string(c[3]) + std::to_string(c[4]) + std::to_string(c[5]) + std::to_string(c[6]) + std::to_string(c[7]));
             int out = 0;
             for (int j = binaryDim - 1; j >= 0; j--) {
@@ -76,15 +77,15 @@ RNNTest::RNNTest() {
 #else
     std::vector<double> results;
 
-    matrix s0 = 2.0 * matrix::random::rand(2,16) - 1.0;
+    matrix s0 = 1.0 * matrix::random::rand(2,16) - 0.5;
 
-    matrix b0 = 2.0 * matrix::random::rand(1,16) - 1.0;
-    matrix s1 = 2.0 * matrix::random::rand(16,1) - 1.0;
-    matrix b1 = 2.0 * matrix::random::rand(1,1) - 1.0;
+    matrix b0 = 1.0 * matrix::random::rand(1,16) - 0.5;
+    matrix s1 = 1.0 * matrix::random::rand(16,1) - 0.5;
+    matrix b1 = 1.0 * matrix::random::rand(1,1) - 0.5;
     matrix sm = 1.0 * matrix::random::rand(16,16) - 0.5;
 
-    const double eta = 0.1;
-    const double mu = 0.05;
+    const double eta = 0.01;
+    const double mu = 0.1;
 
     double overallError = 0;
     double error, recentAverageError = 0;
@@ -118,13 +119,13 @@ RNNTest::RNNTest() {
             matrix y = matrix(1,1);
             y[0][0] = c[binaryDim - 1 - pos];
 
-            matrix l1 = Utils::tanhFunction(X*s0 + l1Values.back()*sm + 1.0*b0);
-            matrix l2 = Utils::tanhFunction(l1*s1+ 1.0*b1);
+            matrix l1 = Utils::tanh(X*s0 + l1Values.back()*sm + 1.0*b0);
+            matrix l2 = Utils::tanh(l1*s1+ 1.0*b1);
 
             double &x = l2[0][0];
             double yy = y[0][0];
             matrix l2Error = matrix(1,1);
-            l2Error[0][0] = yy - x; //0.5*((yy - x)*(yy - x));
+            l2Error[0][0] = yy - x; //0.5*((yy - x)*(yy - x)); //
             l2Deltas.push_back(matrix::mbe(l2Error, Utils::tanhOutputToDerivative(l2)));
 
             //overallError += std::abs(l2Error.elements[0][0]);

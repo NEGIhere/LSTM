@@ -25,7 +25,7 @@ public:
 
     matrix transposed();
 
-    matrix& dot(const matrix& other);
+    matrix dot(const matrix& other);
     static matrix mbe(matrix m0, matrix m1); /// Multiply by elements
     static matrix hstack(matrix m0, matrix m1); /// Stack matrices in sequence horizontally (column wise)
     static matrix vstack(matrix m0, matrix m1); /// Stack matrices in sequence vertically (row wise)
@@ -39,7 +39,7 @@ public:
     matrix& operator-=(const matrix& other);
     matrix& operator+=(const double num);
     matrix& operator-=(const double num);
-    matrix& operator*=(const matrix& other);
+    matrix operator*=(const matrix& other);
     matrix& operator*=(const double num);
     std::vector<double>& operator[](const unsigned int i);
 

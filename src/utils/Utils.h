@@ -10,9 +10,11 @@
 #include "matrix.h"
 #include <iostream>
 
-#define PI 3.14159265359f
-#define rad2deg (1 / PI * 180.0f)
-#define deg2rad (1 / 180.0f * PI)
+#define PI 3.14159265359
+/// Multiply by this value
+#define rad2deg (1 / PI * 180.0)
+/// Multiply by this value
+#define deg2rad (1 / 180.0 * PI)
 
 struct matrix;
 
@@ -26,19 +28,18 @@ public:
         return first + (rand() % (last - first + 1));
     }
 
-    inline float radToDeg(float rad) {
-        return rad / PI * 180.f;
+    inline double radToDeg(float rad) {
+        return rad / PI * 180.0;
     }
 
-    inline float degToRad(float deg) {
-        return deg / 180.0f * PI;
+    inline double degToRad(float deg) {
+        return deg / 180.0 * PI;
     }
 
     static std::vector<double> softmax(const std::vector<double>& vec);
     static int argmax(const std::vector<double>& vec);
 
-    template<typename Base, typename T>
-    static inline bool instanceOf(const T *) {
+    template<typename Base, typename T> static inline bool instanceOf(const T *) {
         return std::is_base_of<Base, T>::value;
     }
 
@@ -58,13 +59,11 @@ public:
 
     static void print(const matrix& m);
 
-    static double randomWeight(void) { return rand() / double(RAND_MAX); }
-
     static double sigmoid(double x);
     static matrix sigmoid(matrix x);
-    static double tanhFunction(double x);
-    static matrix tanhFunction(matrix x);
-    static double tanhOutputToDerivative(double x);
+    static inline double tanh(double x) { return std::tanh(x); };
+    static matrix tanh(matrix x);
+    static inline double tanhOutputToDerivative(double x) { return (1.0 - x * x); };
     static matrix tanhOutputToDerivative(matrix x);
     static double sigmoidDerivative(double x);
     static matrix sigmoidDerivative(matrix x);

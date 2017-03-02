@@ -19,7 +19,7 @@ enum LayerType {
 
 class Layer {
 public:
-    const LayerType type;
+    LayerType type;
     Layer(const unsigned int in, const unsigned int out);
     virtual void feedForward(Model& model, Layer& prevLayer);
     virtual void backPropagate(Model& model, Layer& nextLayer, const unsigned int& step);
@@ -33,7 +33,6 @@ public:
 
 class RNNLayer : public Layer {
 public:
-    const LayerType type;
     RNNLayer(const unsigned int in, const unsigned int out, int capacity);
     void feedForward(Model& model, Layer& prevLayer);
     void backPropagate(Model& model, Layer& nextLayer, const unsigned int& step);
@@ -45,24 +44,27 @@ public:
 
 class LSTMLayer : public RNNLayer {
 public:
-    const LayerType type;
-    LSTMLayer(const unsigned int in, const unsigned int out, int capacity);
+    LSTMLayer(const unsigned int prevIn, const unsigned int in, const unsigned int out, int capacity);
     void feedForward(Model& model, Layer& prevLayer);
     void backPropagate(Model& model, Layer& nextLayer, const unsigned int& step);
-    //// Cell State
-    //matrix cellState;
-    //matrix cellStateW, gradientCellStateW, updateCellStateW;
-    //matrix cellStateB, deltaCellStateB, updateCellStateB;
+    // Cell State
+    matrix cellState;
+    matrix cellStateW, gradientCellStateW, updateCellStateW;
+    matrix cellStateB, deltaCellStateB, updateCellStateB;
+    // Candidate Cell State
+    matrix candidateCellState;
+    matrix candidateCellStateW, gradientCandidateCellStateW, updateCandidateCellStateW;
+    matrix candidateCellStateB, deltaCandidateCellStateB, updateCandidateCellStateB;
     std::vector<matrix> prevCellsStateValues;
     // Forget Gate layer
     matrix forgetW, gradientForgetW, updateForgetW;
     matrix forgetB, deltaForgetB, updateForgetB;
-    //// Input Gate layer
-    //matrix inputGateW, gradientInputGateW, updateInputGateW;
-    //matrix inputGateB, deltaInputGateB, updateInputGateB;
-    //// Sigmoid Gate layer
-    //matrix sigmoidGateW, gradientSigmoidGateW, updateSigmoidGateW;
-    //matrix sigmoidGateB, deltaSigmoidGateB, updateSigmoidGateB;
+    // Input Gate layer
+    matrix inputGateW, gradientInputGateW, updateInputGateW;
+    matrix inputGateB, deltaInputGateB, updateInputGateB;
+    // Sigmoid Gate layer
+    matrix sigmoidGateW, gradientSigmoidGateW, updateSigmoidGateW;
+    matrix sigmoidGateB, deltaSigmoidGateB, updateSigmoidGateB;
 
 };
 

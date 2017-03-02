@@ -43,14 +43,6 @@ double Utils::sigmoidOutputToDerivative(double output) {
     return output * (1 - output);
 }
 
-double Utils::tanhFunction(double x) {
-    return tanh(x);
-}
-
-double Utils::tanhOutputToDerivative(double x) {
-    return (1.0 - x * x); // 1.0 - x * x
-}
-
 matrix Utils::sigmoid(matrix x) {
     for (auto& r : x.elements) {
         for (auto& c : r) {
@@ -60,10 +52,10 @@ matrix Utils::sigmoid(matrix x) {
     return x;
 }
 
-matrix Utils::tanhFunction(matrix x) {
+matrix Utils::tanh(matrix x) {
     for (auto& r : x.elements) {
         for (auto& c : r) {
-            c = tanhFunction(c);
+            c = tanh(c);
         }
     }
     return x;

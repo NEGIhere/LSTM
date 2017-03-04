@@ -28,7 +28,7 @@ RNNTest::RNNTest() {
 #define MODEL
 
 #ifdef MODEL
-    Model model = Model(0.1, 0.9);
+    Model model = Model(0.1, 0.9, 0);
     model.addLayer(new Layer(2,16));
     model.addLayer(new LSTMLayer(2,16,1, 8));
     //model.addLayer(new RNNLayer(16,1, 8));
@@ -69,7 +69,7 @@ RNNTest::RNNTest() {
             Utils::print(std::string("True:") + std::to_string(c[0]) + std::to_string(c[1]) + std::to_string(c[2]) + std::to_string(c[3]) + std::to_string(c[4]) + std::to_string(c[5]) + std::to_string(c[6]) + std::to_string(c[7]));
             int out = 0;
             for (int j = binaryDim - 1; j >= 0; j--) {
-                out += d[j]*pow(2, binaryDim-j-1);
+                out += std::round(d[j])*pow(2, binaryDim-j-1);
             }
             Utils::print(std::to_string(a_int) + " + " + std::to_string(b_int) + " = " + std::to_string(out));
         }

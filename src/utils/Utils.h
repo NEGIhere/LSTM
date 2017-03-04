@@ -38,7 +38,7 @@ public:
 
     static std::vector<double> softmax(const std::vector<double>& vec);
     static int argmax(const std::vector<double>& vec);
-
+    static matrix outer(std::vector<double> v0, std::vector<double> v1);
     template<typename Base, typename T> static inline bool instanceOf(const T *) {
         return std::is_base_of<Base, T>::value;
     }

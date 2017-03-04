@@ -20,7 +20,7 @@ public:
     void draw(sf::RenderWindow& window);
     void train();
     static double inline function(double x) {
-        return cos(x / SCREEN_WIDTH * 10) * SCREEN_HEIGHT / 3 + SCREEN_HEIGHT / 2;
+        return cos(x / SCREEN_WIDTH * 10/* * (x / SCREEN_WIDTH * 2)*/) /* * (x / SCREEN_WIDTH)*/ * SCREEN_HEIGHT / 3 + SCREEN_HEIGHT / 2;
     }
 private:
     static const int trainSamplesCount = 8;

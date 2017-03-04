@@ -12,7 +12,7 @@ std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution
 unsigned long iters = 0;
 
 FuncPredictTest::FuncPredictTest() :
-        model(0.07, 0.85), trainSet(DOTS) {
+        model(0.01, 0.8, 0.0), trainSet(DOTS) {
     if (!font.loadFromFile("res/Consolas.ttf")) {
         exit(EXIT_FAILURE);
     }
@@ -69,9 +69,7 @@ void FuncPredictTest::update() {
 
 
 void FuncPredictTest::draw(sf::RenderWindow& window) {
-    if (DOTS < 3) {
-        return;
-    }
+    static_assert(DOTS > 3,  "DOTS must be >3");
 
     unsigned int vertexCount = (DOTS - 1) * 2;
 

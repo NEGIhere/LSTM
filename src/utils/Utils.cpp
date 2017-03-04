@@ -98,11 +98,25 @@ void Utils::print(const matrix &m) {
         std::cout << "[";
         for (auto& c : r) {
             //out << c << ",";
-            printf("%.16f,", c);
+            if (int(c) == c){
+                printf("%.0f, ", c);
+            } else {
+                printf("%.16f, ", c);
+            }
         }
         std::cout << "\b],\n";
         if (ws == 0) ws++;
     }
     //out << "\b\b";
     //std::cout << out.rdbuf();
+}
+
+matrix Utils::outer(std::vector<double> v0, std::vector<double> v1) {
+    matrix mat(v0.size(), v1.size());
+    for (int i = 0; i < mat.numRows; i++) {
+        for (int j = 0; j < mat.numColumns; j++) {
+            mat[i][j] = v0[i]*v1[j];
+        }
+    }
+    return mat;
 }

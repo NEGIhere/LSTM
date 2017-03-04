@@ -20,17 +20,20 @@ void draw() {
 }
 
 int main() {
-    srand(1);/*
-    matrix A = matrix({
+    srand(1);
+/*    matrix A = matrix({
                 {1,2,3},
                 {4,5,6}
     });
     matrix B = matrix({
-                {4,5,6},
-                {7,8,9}
+                {6,5,4,3}
     });
 
-    Utils::print(matrix::hstack(A,B));*/
+    Utils::print(Utils::outer(B[0],A[0]));*/
+    /*std::vector<double> v = {0,1,2,3,4,5,6};
+    Utils::print(v);
+    v.erase(v.begin(), v.size() > 2 ? v.begin() + 2 : v.end());
+    Utils::print(v);*/
     RNNTest* rnn = new RNNTest();
 
     bool rendering = true;
